@@ -1,1 +1,1 @@
-Analitica en recusos humanos
+Analítica en recursos humanos
