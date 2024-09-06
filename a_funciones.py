@@ -1,4 +1,3 @@
-####### prueba
 import numpy as np
 import pandas as pd
 from sklearn.impute import SimpleImputer ### para imputación
@@ -18,34 +17,6 @@ def ejecutar_sql (nombre_archivo, cur):
   cur.executescript(sql_as_string)
   
  
-
-def imputar_f (df,list_cat):  
-        
-    
-    df_c=df[list_cat]
-
-    df_n=df.loc[:,~df.columns.isin(list_cat)]
-
-    imputer_n=SimpleImputer(strategy='median')
-    imputer_c=SimpleImputer( strategy='most_frequent')
-
-    imputer_n.fit(df_n)
-    imputer_c.fit(df_c)
-    imputer_c.get_params()
-    imputer_n.get_params()
-
-    X_n=imputer_n.transform(df_n)
-    X_c=imputer_c.transform(df_c)
-
-
-    df_n=pd.DataFrame(X_n,columns=df_n.columns)
-    df_c=pd.DataFrame(X_c,columns=df_c.columns)
-    df_c.info()
-    df_n.info()
-
-    df =pd.concat([df_n,df_c],axis=1)
-    return df
-
 
 def sel_variables(modelos,X,y,threshold):
     
@@ -79,9 +50,9 @@ def preparar_datos(df):
     #######Cargar y procesar nuevos datos ######       
     #### Cargar modelo y listas
     
-    list_dummies=joblib.load("salidas\\list_dummies.joblib")
-    var_names=joblib.load("salidas\\var_names.joblib")
-    scaler=joblib.load( "salidas\\scaler.joblib") 
+    list_dummies=joblib.load("salidas\\list_dummies.pkl")
+    var_names=joblib.load("salidas\\var_names.pkl")
+    scaler=joblib.load( "salidas\\scaler.pkl") 
 
     ####Ejecutar funciones de transformaciones
     #Eliminación de variables InfoDate y retirementDate, ya que no son relevantes dentro del dataframe (informacion 2015-retiros 2016)
