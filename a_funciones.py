@@ -55,8 +55,8 @@ def preparar_datos(df):
     scaler=joblib.load( "salidas\\scaler.pkl") 
 
     ####Ejecutar funciones de transformaciones
-    #Eliminación de variables InfoDate y retirementDate, ya que no son relevantes dentro del dataframe (informacion 2015-retiros 2016)
-    df=df.drop(columns=['InfoDate','retirementDate'])
+   #Eliminación de variables InfoDate, retirementDate, DateSurvey y SurveyDate ya que no son relevantes dentro del dataframe (informacion 2015-retiros 2016)
+    df=df.drop(columns=['InfoDate','retirementDate','DateSurvey','SurveyDate'])
 
     #Cambiar variables float a integer
     columnas_float=df.select_dtypes(include=['float']).columns
@@ -64,8 +64,8 @@ def preparar_datos(df):
     
     df_dummies=pd.get_dummies(df,columns=list_dummies)
     
-    #Eliminacion de variables categoricas(fecha) y variables resignationReason ya que se presentan una alta correlación con la variable objetivo Attrition lo cual sesga el desempeño de los modelos.
-    df_dummies=df_dummies.drop(columns=['DateSurvey','SurveyDate','resignationReason_Fired', 'resignationReason_NoRetirement',
+    #Eliminacion de  resignationReason ya que se presentan una alta correlación con la variable objetivo Attrition lo cual sesga el desempeño de los modelos.
+    df_dummies=df_dummies.drop(columns=['resignationReason_Fired', 'resignationReason_NoRetirement',
        'resignationReason_Others', 'resignationReason_Salary',
        'resignationReason_Stress', 'retirementType_Fired',
        'retirementType_NoRetirement', 'retirementType_Resignation' ])    
