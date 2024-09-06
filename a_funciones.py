@@ -74,31 +74,33 @@ def medir_modelos(modelos,scoring,X,y,cv):
 
 
 
-def preparar_datos (df):
-   
-    
+def preparar_datos(df):     
 
-    #######Cargar y procesar nuevos datos ######
-   
+    #######Cargar y procesar nuevos datos ######       
+    #### Cargar modelo y listas
     
-    #### Cargar modelo y listas 
-    
-   
-    list_cat=joblib.load("salidas\\list_cat.pkl")
-    list_dummies=joblib.load("salidas\\list_dummies.pkl")
-    var_names=joblib.load("salidas\\var_names.pkl")
-    scaler=joblib.load( "salidas\\scaler.pkl") 
+    list_dummies=joblib.load("salidas\\list_dummies.joblib")
+    var_names=joblib.load("salidas\\var_names.joblib")
+    scaler=joblib.load( "salidas\\scaler.joblib") 
 
     ####Ejecutar funciones de transformaciones
+    #Eliminación de variables InfoDate y retirementDate, ya que no son relevantes dentro del dataframe (informacion 2015-retiros 2016)
+    df=df.drop(columns=['InfoDate','retirementDate'])
+
+    #Cambiar variables float a integer
+    columnas_float=df.select_dtypes(include=['float']).columns
+    df[columnas_float]=df[columnas_float].astype(int)
     
-    df=imputar_f(df,list_cat)
     df_dummies=pd.get_dummies(df,columns=list_dummies)
-    df_dummies= df_dummies.loc[:,~df_dummies.columns.isin(['perf_2023','EmpID2'])]
-    X2=scaler.transform(df_dummies)
-    X=pd.DataFrame(X2,columns=df_dummies.columns)
-    X=X[var_names]
     
-    
-    
-    
+    #Eliminacion de variables categoricas(fecha) y variables resignationReason ya que se presentan una alta correlación con la variable objetivo Attrition lo cual sesga el desempeño de los modelos.
+    df_dummies=df_dummies.drop(columns=['DateSurvey','SurveyDate','resignationReason_Fired', 'resignationReason_NoRetirement',
+       'resignationReason_Others', 'resignationReason_Salary',
+       'resignationReason_Stress', 'retirementType_Fired',
+       'retirementType_NoRetirement', 'retirementType_Resignation' ])    
+    df_dummies = df_dummies.loc[:,~df_dummies.columns.isin(['Attrition','EmployeeID'])]    
+    X2 = scaler.transform(df_dummies)
+    X = pd.DataFrame(X2,columns=df_dummies.columns)
+    X = X[var_names]
+
     return X
