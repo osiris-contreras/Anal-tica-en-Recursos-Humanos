@@ -62,13 +62,10 @@ def preparar_datos(df):
     columnas_float=df.select_dtypes(include=['float']).columns
     df[columnas_float]=df[columnas_float].astype(int)
     
-    df_dummies=pd.get_dummies(df,columns=list_dummies)
-    
-    #Eliminacion de  resignationReason ya que se presentan una alta correlación con la variable objetivo Attrition lo cual sesga el desempeño de los modelos.
-    df_dummies=df_dummies.drop(columns=['resignationReason_Fired', 'resignationReason_NoRetirement',
-       'resignationReason_Others', 'resignationReason_Salary',
-       'resignationReason_Stress', 'retirementType_Fired',
-       'retirementType_NoRetirement', 'retirementType_Resignation' ])    
+    list_dummies.remove('retirementType')
+    list_dummies.remove('resignationReason')
+    df_dummies=pd.get_dummies(df,columns=list_dummies)    
+  
     df_dummies = df_dummies.loc[:,~df_dummies.columns.isin(['Attrition','EmployeeID'])]    
     X2 = scaler.transform(df_dummies)
     X = pd.DataFrame(X2,columns=df_dummies.columns)
