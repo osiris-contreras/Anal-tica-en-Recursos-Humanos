@@ -53,10 +53,10 @@ def preparar_datos(df):
     list_dummies=joblib.load("salidas\\list_dummies.pkl")
     var_names=joblib.load("salidas\\var_names.pkl")
     scaler=joblib.load( "salidas\\scaler.pkl") 
-
+    
     ####Ejecutar funciones de transformaciones
-   #Eliminación de variables InfoDate, retirementDate, DateSurvey y SurveyDate ya que no son relevantes dentro del dataframe (informacion 2015-retiros 2016)
-    df=df.drop(columns=['InfoDate','retirementDate','DateSurvey','SurveyDate'])
+    #Eliminación de variables InfoDate, retirementDate, DateSurvey y SurveyDate ya que no son relevantes dentro del dataframe (informacion 2015-retiros 2016)
+    df=df.drop(columns=['InfoDate','retirementDate','DateSurvey','SurveyDate','retirementType','resignationReason'])
 
     #Cambiar variables float a integer
     columnas_float=df.select_dtypes(include=['float']).columns
